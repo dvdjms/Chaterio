@@ -7,7 +7,7 @@ const LoginPage = () => {
 
     return (
         <ContainerHome>
-            <Header>Chaterio</Header>
+             <Header><a href="/">Chaterio</a></Header>
             <HeaderFour>Login</HeaderFour>
             <ContainerLogin>
                 <Form>

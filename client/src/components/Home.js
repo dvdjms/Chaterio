@@ -4,6 +4,17 @@ import styled from "styled-components";
 
 const HomePage = () => {
 
+    const handleSubmit = (e) => {
+        const formData = {
+            roomName: e.target.RoomName.value
+        };
+        console.log(formData)
+        return (
+
+            console.log(formData)
+        )
+    }
+
 
     return (
         <ContainerHome>
@@ -11,17 +22,16 @@ const HomePage = () => {
             <SectionOuterButtons>
                 <SectionInnerButtons>
 
-                    <a href="/"><RoomButton>New Room</RoomButton></a>
+                    <a href="/chaterio"><RoomButton>New Room</RoomButton></a>
                     <a href="/room"><RoomButton>Join Room</RoomButton></a>
 
                 </SectionInnerButtons>
             </SectionOuterButtons>
 
             <SectionSearch>
-                <Form>
-                    <InputField type="text" placeholder="Search Room"></InputField>
-                    <SubmitButton type="submit">Join Room</SubmitButton>
-
+                <Form onSubmit={handleSubmit}>
+                    <InputField id="RoomName" name="RoomName" type="text" placeholder="Search Room"></InputField>
+                    <SubmitButton type="submit">Start meeting</SubmitButton>
                 </Form>
             </SectionSearch>
 
@@ -33,7 +43,7 @@ const HomePage = () => {
 const InputField = styled.input`
     border: none;
     border-radius: 2vw;
-    font-size: 3vh;
+    font-size: 18px;
     height: 8vh;
     width: 70vw;
     margin-bottom: 3vh;
@@ -41,9 +51,14 @@ const InputField = styled.input`
 `;
 
 const SubmitButton = styled.button`
+    background-color: #10C2C9;
     border: none;
     border-radius: 2vw;
-    font-size: 3vh;
+    border: none;
+    border-radius: 2vw;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
     height: 8vh;
     width: 70vw;
     margin-bottom: 3vh;
@@ -57,8 +72,8 @@ const Form = styled.form`
 
 
 const SectionSearch = styled.section`
-    height: 10vh;
-    border: solid red;
+    height: 20vh;
+    margin-top: 7vh;
 `;
 
 const RoomButton = styled.button`

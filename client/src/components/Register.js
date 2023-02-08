@@ -7,7 +7,7 @@ const Register = () => {
 
     return (
         <ContainerHome>
-            <Header>Chaterio</Header>
+            <Header><a href="/">Chaterio</a></Header>
             <ContainerLogin>
                 <HeaderFour>Register</HeaderFour>
                 <Form>

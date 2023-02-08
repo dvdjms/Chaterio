@@ -6,7 +6,10 @@ const Room = () => {
 
     return (
         <ContainerRoom>
-        <Header>Chaterio</Header>
+          <Header><a href="/">Chaterio</a></Header>
+
+        <HeaderFive>Room name here</HeaderFive>
+
             <VideoSection>
                 <VideoScreen></VideoScreen>
             </VideoSection>
@@ -44,15 +47,24 @@ const SectionInnerButtons = styled.section`
 `;
 
 const SectionOuterButtons = styled.section`
-    margin-top: 25vh;
+    margin-top: 20vh;
     height: 9vh;
     text-align: center;
 `;
 
 const Header = styled.h1`
-    color:  #d9005a;
+    color: #d9005a;
     margin-top: 0;
+    margin-bottom:0;
     font-size: 57px;
+    padding-top: 1vh;
+    text-align: center;
+`;
+
+const HeaderFive = styled.h5`
+    color: #d9005a;
+    margin-top: 0;
+    font-size: 27px;
     padding-top: 2vh;
     text-align: center;
 `;
@@ -64,7 +76,6 @@ const VideoScreen = styled.div`
     object-fit: cover;
     border: solid #e31a6d;
     border-radius: 2vh;
- 
 `;
 
 const VideoSection = styled.div`
