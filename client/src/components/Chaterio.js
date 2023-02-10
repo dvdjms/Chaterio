@@ -5,6 +5,12 @@ import io from "socket.io-client"
 import "./Chaterio.css"
 import styled from "styled-components";
 
+
+import IconButton from '@mui/material/IconButton';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+// import Button from '@mui/icons-material/Button';
+// import PhoneIcon from '@mui/material/Icon';
+
 const socket = io.connect("http://localhost:3000");
 
 function Chaterio() {
@@ -24,12 +30,18 @@ function Chaterio() {
     const connectionRef = useRef();
 
     useEffect(() => {
-        navigator.mediaDevices.getUserMedia({video: true, audio: true}).then((stream) => {
+        navigator.mediaDevices.getUserMedia({
+            video: true, 
+            audio: true
+        })
+            .then((stream) => {
                 setStream(stream)
-                myVideo.current.srcObject = stream
+                if (myVideo.current) {
+                    myVideo.current.srcObject = stream
+                }
             })
 
-            socket.on('me', (id) => {
+            socket.on("me", (id) => {
                 setMe(id)
             })
 
@@ -97,15 +109,15 @@ function Chaterio() {
     return ( 
         <>
         <OuterContainer>
-        <Header><a href="/">Chaterio</a></Header>
+        <Header><AlinkHeader href="/">Chaterio</AlinkHeader></Header>
         <Container>
             <VideoContainer>
                 <VideoMe>
-                    {stream && <video playInline muted ref={myVideo} autoPlay style={{width: "300px"}} />}
+                    {stream && <video playsInline muted ref={myVideo} autoPlay style={{width: "300px"}} />}
                 </VideoMe>
                 <VideoYou className="video">
                     {callAccepted && !callEnded ?
-                    <video playInline ref={userVideo} autoPlay style={{ width: "300px"}} />:
+                    <video playsInline ref={userVideo} autoPlay style={{ width: "300px"}} />:
                     null}
                 </VideoYou>
             </VideoContainer>
@@ -117,12 +129,12 @@ function Chaterio() {
                     variant="filled" 
                     value={name} 
                     onChange={(e) => setName(e.target.value)}
-                    style={{ marginBottom: "20px" }} 
+                    style={{ marginBottom: ".5rem" }} 
                 />
-                <CopyToClipboard text={me} style={{marginBottom: "2rem"}}>
-                        <Button variant="contained" color="primary" starIcon={<AssignmentIcon fontSize="large"/>}>
-                            Copy ID
-                        </Button>
+                <CopyToClipboard text={me} style={{marginBottom: ".5rem"}}>
+                    <Button variant="contained" color="primary" starIcon={<AssignmentIcon fontSize="large"/>}>
+                        Copy ID
+                    </Button>
                 </CopyToClipboard>
 
                 <TextField 
@@ -132,7 +144,7 @@ function Chaterio() {
                     value={idToCall} 
                     onChange={(e) => setIdToCall(e.target.value)} 
                 />
-                <div className="call=button">
+                <CallButton>
                     {callAccepted && !callEnded ? (
                         <Button variant="contained" color="secondary" onClick={leaveCall}>
                             End call
@@ -143,7 +155,7 @@ function Chaterio() {
                         </IconButton>
                     )}
                     {idToCall}
-                </div>
+                </CallButton>
             </ContainerInput>
             <div>
                 {receivingCall && !callAccepted ? (
@@ -156,25 +168,67 @@ function Chaterio() {
                 ) : null}
             </div>
         </Container>
+        <SectionOuterButtons>
+                <SectionInnerButtons>
+
+                    <a href="/"><RoomButton>Leave Room</RoomButton></a>
+                    <a href="/room"><RoomButton>Join Room</RoomButton></a>
+
+                </SectionInnerButtons>
+            </SectionOuterButtons>
         </OuterContainer>
         </>
     )
 }
 
+
+const CallButton = styled.div`
+	text-align: center;
+	margin-top: .5rem;
+	height: 20px;
+	width: 20px;
+	border: solid white;
+`;
+
+const SectionInnerButtons = styled.section`
+    width: 90%;
+    margin: auto;
+`;
+
+const SectionOuterButtons = styled.section`
+    margin-top: 15vh;
+    height: 9vh;
+    text-align: center;
+`;
+
+
+const RoomButton = styled.button`
+    background-color: #10C2C9;
+    border: none;
+    border-radius: 2vw;
+    height: 8vh;
+    width: 37vw;
+    margin-left: 3vw;
+    margin-right: 3vw;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+`;
+
+
 const VideoMe = styled.div`
     float: left;
+
 `;
 
 const VideoYou = styled.div`
     float: left;
+ 
 `;
-
-
 
 const VideoContainer = styled.div`
 	display: grid;
 	grid-template-columns: 1fr;
-    
     /* 1fr 1fr */
 `;
 
@@ -189,41 +243,51 @@ const Container = styled.div`
 
 const TextField = styled.input`
     border: solid red;
+    height: 25px;
+    width: 200px;
 `;
 
 const Button = styled.button`
     border: solid red;
+    height: 30px;
+    width: 206px;
 `;
 
-const IconButton = styled.button`
-    border: solid red;
-`;
+// const IconButton = styled.div`
+//     border: solid red;
+// `;
 
-const AssignmentIcon = styled.i`
-    border: solid red;
-`;
+// const AssignmentIcon = styled.div`
+//     border: solid red;
+// `;
 
-const PhoneIcon = styled.button`
+const PhoneIcon = styled.span`
     border: solid red;
 `;
 
 const Header = styled.h1`
     color:  #d9005a;
     margin-top: 0;
-    font-size: 57px;
+    font-size: 17px;
     padding-top: 2vh;
     text-align: center;
+    text-decoration: none;
+`;
+
+const AlinkHeader = styled.a`
+    color:  #d9005a;
+    text-decoration: none;
 `;
 
 
 const ContainerInput = styled.div`
     border-radius: 5px;
-    padding: 2rem;
+    padding: 1rem;
     display: grid;
     background-color: slategray;
-    height: 17vh;
+    height: 16vh;
     position: absolute;
-    margin-top: 37vh;
+    margin-top: 53vh;
 `;
 
 const OuterContainer = styled.div`

@@ -5,9 +5,10 @@ import Room from "../components/Room";
 import Login from "../components/Login";
 import Register from "../components/Register";
 import Chaterio from "../components/Chaterio";
+import TestRoom from "../components/TestRoom";
+import VideoCall from "../components/VideoCall";
 
 const Main = () => {
-
 
     return (
 
@@ -18,6 +19,8 @@ const Main = () => {
                 <Route path = "/room" element={<Room/>} />
                 <Route path = "/login" element={<Login/>} />
                 <Route path = "/register" element={<Register/>} />
+                <Route path = "/testroom/:id" element={<TestRoom/>} />
+                <Route path = "/videocall" element={<VideoCall/>} />
             </Routes>
         </Router>
     )

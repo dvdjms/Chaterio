@@ -30,7 +30,7 @@ const HomePage = () => {
 
             <SectionSearch>
                 <Form onSubmit={handleSubmit}>
-                    <InputField id="RoomName" name="RoomName" type="text" placeholder="Search Room"></InputField>
+                    <InputField id="RoomName" name="RoomName" type="text" placeholder="Name Your Room"></InputField>
                     <SubmitButton type="submit">Start meeting</SubmitButton>
                 </Form>
             </SectionSearch>

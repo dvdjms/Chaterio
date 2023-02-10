@@ -7,7 +7,7 @@ const Register = () => {
 
     return (
         <ContainerHome>
-            <Header><a href="/">Chaterio</a></Header>
+            <Header><AlinkHeader href="/">Chaterio</AlinkHeader></Header>
             <ContainerLogin>
                 <HeaderFour>Register</HeaderFour>
                 <Form>
@@ -76,6 +76,12 @@ const Header = styled.h1`
     font-size: 57px;
     padding-top: 2vh;
     text-align: center;
+
+`;
+
+const AlinkHeader = styled.a`
+    color:  #d9005a;
+    text-decoration: none;
 `;
 
 

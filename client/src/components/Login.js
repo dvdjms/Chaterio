@@ -7,7 +7,7 @@ const LoginPage = () => {
 
     return (
         <ContainerHome>
-             <Header><a href="/">Chaterio</a></Header>
+            <Header><AlinkHeader href="/">Chaterio</AlinkHeader></Header>
             <HeaderFour>Login</HeaderFour>
             <ContainerLogin>
                 <Form>
@@ -71,6 +71,12 @@ const Header = styled.h1`
     font-size: 57px;
     padding-top: 2vh;
     text-align: center;
+    text-decoration: none;
+`;
+
+const AlinkHeader = styled.a`
+    color:  #d9005a;
+    text-decoration: none;
 `;
 
 

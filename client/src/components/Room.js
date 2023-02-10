@@ -6,7 +6,7 @@ const Room = () => {
 
     return (
         <ContainerRoom>
-          <Header><a href="/">Chaterio</a></Header>
+          <Header><AlinkHeader href="/">Chaterio</AlinkHeader></Header>
 
         <HeaderFive>Room name here</HeaderFive>
 
@@ -53,13 +53,19 @@ const SectionOuterButtons = styled.section`
 `;
 
 const Header = styled.h1`
-    color: #d9005a;
+    color:  #d9005a;
     margin-top: 0;
-    margin-bottom:0;
     font-size: 57px;
-    padding-top: 1vh;
+    padding-top: 2vh;
     text-align: center;
+    text-decoration: none;
 `;
+
+const AlinkHeader = styled.a`
+    color:  #d9005a;
+    text-decoration: none;
+`;
+
 
 const HeaderFive = styled.h5`
     color: #d9005a;
@@ -91,7 +97,6 @@ const ContainerRoom = styled.div`
     background-color: #252934;
     min-height: 100vh;
 `;
-
 
 
 export default Room;
