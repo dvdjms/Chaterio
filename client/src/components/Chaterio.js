@@ -11,7 +11,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 // import Button from '@mui/icons-material/Button';
 // import PhoneIcon from '@mui/material/Icon';
 
-const socket = io.connect("http://localhost:3000");
+const socket = io.connect("http://localhost:9000");
 
 function Chaterio() {
 
@@ -31,7 +31,7 @@ function Chaterio() {
 
     useEffect(() => {
         navigator.mediaDevices.getUserMedia({
-            video: true, 
+            video: true,
             audio: true
         })
             .then((stream) => {
@@ -41,16 +41,16 @@ function Chaterio() {
                 }
             })
 
-            socket.on("me", (id) => {
-                setMe(id)
-            })
+        socket.on("me", (id) => {
+            setMe(id)
+        })
 
-            socket.on("callUser", (data) => {
-                setReceivingCall(true)
-                setCaller(data.from)
-                setName(data.name)
-                setCallerSignal(data.signal)
-            })
+        socket.on("callUser", (data) => {
+            setReceivingCall(true)
+            setCaller(data.from)
+            setName(data.name)
+            setCallerSignal(data.signal)
+        })
     }, []);
 
     const callUser = (id) => {
@@ -67,18 +67,19 @@ function Chaterio() {
                 from: me,
                 name: name
             })
-         })
+        })
 
-         peer.on("stream", (stream) => {
+        peer.on("stream", (stream) => {
+            console.log("stream", stream)
             userVideo.current.srcObject = stream
-         })
+        })
 
-         socket.on("callAccepted", (signal) => {
+        socket.on("callAccepted", (signal) => {
             setCallAccepted(true)
             peer.signal(signal)
-         })
+        })
 
-         connectionRef.current = peer;
+        connectionRef.current = peer;
     };
 
     const answerCall = () => {
@@ -90,7 +91,7 @@ function Chaterio() {
         })
 
         peer.on("signal", (data) => {
-            socket.emit("answerCall", {signal: data, to: caller})
+            socket.emit("answerCall", { signal: data, to: caller })
         })
 
         peer.on("stream", (stream) => {
@@ -106,77 +107,77 @@ function Chaterio() {
         connectionRef.current.destroy()
     }
 
-    return ( 
+    return (
         <>
-        <OuterContainer>
-        <Header><AlinkHeader href="/">Chaterio</AlinkHeader></Header>
-        <Container>
-            <VideoContainer>
-                <VideoMe>
-                    {stream && <video playsInline muted ref={myVideo} autoPlay style={{width: "300px"}} />}
-                </VideoMe>
-                <VideoYou className="video">
-                    {callAccepted && !callEnded ?
-                    <video playsInline ref={userVideo} autoPlay style={{ width: "300px"}} />:
-                    null}
-                </VideoYou>
-            </VideoContainer>
+            <OuterContainer>
+                <Header><AlinkHeader href="/">Chaterio</AlinkHeader></Header>
+                <Container>
+                    <VideoContainer>
+                        <VideoMe>
+                            {stream && <video playsInline muted ref={myVideo} autoPlay style={{ width: "300px" }} />}
+                        </VideoMe>
+                        <VideoYou className="video">
+                            {callAccepted && !callEnded ?
+                                <video playsInline ref={userVideo} autoPlay style={{ width: "300px" }} /> :
+                                null}
+                        </VideoYou>
+                    </VideoContainer>
 
-            <ContainerInput>
-                <TextField 
-                    id="filled-basic" 
-                    label="Name" 
-                    variant="filled" 
-                    value={name} 
-                    onChange={(e) => setName(e.target.value)}
-                    style={{ marginBottom: ".5rem" }} 
-                />
-                <CopyToClipboard text={me} style={{marginBottom: ".5rem"}}>
-                    <Button variant="contained" color="primary" starIcon={<AssignmentIcon fontSize="large"/>}>
-                        Copy ID
-                    </Button>
-                </CopyToClipboard>
+                    <ContainerInput>
+                        <TextField
+                            id="filled-basic"
+                            label="Name"
+                            variant="filled"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            style={{ marginBottom: ".5rem" }}
+                        />
+                        <CopyToClipboard text={me} style={{ marginBottom: ".5rem" }}>
+                            <Button variant="contained" color="primary" starIcon={<AssignmentIcon fontSize="large" />}>
+                                Copy ID
+                            </Button>
+                        </CopyToClipboard>
 
-                <TextField 
-                    id="filled-basic" 
-                    label="ID to call" 
-                    variant="filled" 
-                    value={idToCall} 
-                    onChange={(e) => setIdToCall(e.target.value)} 
-                />
-                <CallButton>
-                    {callAccepted && !callEnded ? (
-                        <Button variant="contained" color="secondary" onClick={leaveCall}>
-                            End call
-                        </Button>
-                    ) : (
-                        <IconButton color="primary" aria-label="call" onClick={() => callUser(idToCall)}>
-                            <PhoneIcon fontSize="large" />
-                        </IconButton>
-                    )}
-                    {idToCall}
-                </CallButton>
-            </ContainerInput>
-            <div>
-                {receivingCall && !callAccepted ? (
-                    <div className="caller">
-                        <h1>{name} is calling...</h1>
-                        <Button variant="contained" color="primary" onClick={answerCall}>
-                            Answer
-                        </Button>
+                        <TextField
+                            id="filled-basic"
+                            label="ID to call"
+                            variant="filled"
+                            value={idToCall}
+                            onChange={(e) => setIdToCall(e.target.value)}
+                        />
+                        <CallButton>
+                            {callAccepted && !callEnded ? (
+                                <Button variant="contained" color="secondary" onClick={leaveCall}>
+                                    End call
+                                </Button>
+                            ) : (
+                                <IconButton color="primary" aria-label="call" onClick={() => callUser(idToCall)}>
+                                    <PhoneIcon fontSize="large" />
+                                </IconButton>
+                            )}
+                            {idToCall}
+                        </CallButton>
+                    </ContainerInput>
+                    <div>
+                        {receivingCall && !callAccepted ? (
+                            <div className="caller">
+                                <h1>{name} is calling...</h1>
+                                <Button variant="contained" color="primary" onClick={answerCall}>
+                                    Answer
+                                </Button>
+                            </div>
+                        ) : null}
                     </div>
-                ) : null}
-            </div>
-        </Container>
-        <SectionOuterButtons>
-                <SectionInnerButtons>
+                </Container>
+                <SectionOuterButtons>
+                    <SectionInnerButtons>
 
-                    <a href="/"><RoomButton>Leave Room</RoomButton></a>
-                    <a href="/room"><RoomButton>Join Room</RoomButton></a>
+                        <a href="/"><RoomButton>Leave Room</RoomButton></a>
+                        <a href="/room"><RoomButton>Join Room</RoomButton></a>
 
-                </SectionInnerButtons>
-            </SectionOuterButtons>
-        </OuterContainer>
+                    </SectionInnerButtons>
+                </SectionOuterButtons>
+            </OuterContainer>
         </>
     )
 }
