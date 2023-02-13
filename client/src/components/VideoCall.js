@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 // import ReactPlayer from 'react-player'
 import Peer from 'peerjs';
-
+import { useParams  } from 'react-router-dom';
 import "./Chaterio.css";
 // import styled from "styled-components";
 import io from "socket.io-client";
 // import Peer from "simple-peer";
+import styled from "styled-components";
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import "./Chaterio.css"
 
 
 const socket = io.connect("http://localhost:9000");
@@ -20,6 +24,10 @@ const VideoCall = () => {
   const videoGridRef = useRef(null);
   const myVideo = React.useRef();
 
+  const { roomId } = useParams();
+
+  console.log("This is a print from useParams in videocall page ", roomId);
+
 
   useEffect(() => {  
     navigator.mediaDevices.getUserMedia({
@@ -31,11 +39,12 @@ const VideoCall = () => {
         if (myVideo.current) {
           myVideo.current.srcObject = stream
         }
-        socket.emit("join-room", "xxxx", 989);
+        socket.emit("join-room", roomId, 989);
         socket.on("user-connected", (userId) => {
           setUserId(userId)
           console.log("User connected " + userId)
 
+ 
           // need to run after connection only
           connectToNewUser(userId, stream)
 
@@ -90,12 +99,92 @@ const VideoCall = () => {
 
 
   return (
+    <>
+      <OuterContainer>
+      <Header><AlinkHeader href="/">Chaterio</AlinkHeader></Header>
+      <Container>
+          <CopyToClipboard text={roomId} style={{ marginBottom: ".5rem" }}>
+              <Button variant="contained" color="primary" starIcon={<AssignmentIcon fontSize="large" />}>
+                  Copy Room Id
+              </Button>
+          </CopyToClipboard>
+        </Container>
     <div>
-       <h1>Video Call with ID: {userId}</h1>
        <div id="video-grid" ref={videoGridRef} />
       {stream && <video playsInline muted ref={myVideo} autoPlay width={500} height={500} />}
     </div>
+   
+        <SectionOuterButtons>
+            <SectionInnerButtons>
+
+                <a href="/"><RoomButton>Leave Room</RoomButton></a>
+                <a href="/room"><RoomButton>Join Room</RoomButton></a>
+
+            </SectionInnerButtons>
+        </SectionOuterButtons>
+      </OuterContainer>
+    </>
   );
 };
+
+
+const SectionInnerButtons = styled.section`
+    width: 90%;
+    margin: auto;
+`;
+
+const SectionOuterButtons = styled.section`
+    margin-top: 15vh;
+    height: 9vh;
+    text-align: center;
+`;
+
+const RoomButton = styled.button`
+    background-color: #10C2C9;
+    border: none;
+    border-radius: 2vw;
+    height: 8vh;
+    width: 37vw;
+    margin-left: 3vw;
+    margin-right: 3vw;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+`;
+
+const Container = styled.div`
+	/* display: grid; */
+	grid-template-columns: 7fr 3fr;
+    height: 10vh;
+    min-width: 100vw;
+    display: flex;
+    justify-content: center;
+`;
+
+const Button = styled.button`
+    border: solid red;
+    height: 30px;
+    width: 206px;
+`;
+
+const Header = styled.h1`
+    color:  #d9005a;
+    margin-top: 0;
+    font-size: 17px;
+    padding-top: 2vh;
+    text-align: center;
+    text-decoration: none;
+`;
+const AlinkHeader = styled.a`
+    color:  #d9005a;
+    text-decoration: none;
+`;
+
+const OuterContainer = styled.div`
+    background-color: #252934;
+    min-height: 100vh;
+`;
+
+
 
 export default VideoCall;

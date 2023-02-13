@@ -1,19 +1,17 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
+import { useNavigate } from 'react-router-dom';
 
+const { v4: uuidV4 } = require('uuid')
 
 const HomePage = () => {
+    const navigate = useNavigate();
+  
+    const handleJoinRoom = useCallback(() => {
+        const roomId = uuidV4();
 
-    const handleSubmit = (e) => {
-        const formData = {
-            roomName: e.target.RoomName.value
-        };
-        console.log(formData)
-        return (
-
-            console.log(formData)
-        )
-    }
+        navigate(`/videocall/${roomId}`)
+    }, [navigate]);
 
 
     return (
@@ -29,10 +27,8 @@ const HomePage = () => {
             </SectionOuterButtons>
 
             <SectionSearch>
-                <Form onSubmit={handleSubmit}>
-                    <InputField id="RoomName" name="RoomName" type="text" placeholder="Name Your Room"></InputField>
-                    <SubmitButton type="submit">Start meeting</SubmitButton>
-                </Form>
+                <InputField id="RoomName" name="RoomName" type="text" placeholder="Enter Room Code"></InputField>
+                <SubmitButton onClick={handleJoinRoom} type="submit">Start meeting</SubmitButton>
             </SectionSearch>
 
 
@@ -65,10 +61,10 @@ const SubmitButton = styled.button`
     padding-left: 5vw;
 `;
 
-const Form = styled.form`
-    height: 10vh;
-    text-align: center;
-`;
+// const Form = styled.form`
+//     height: 10vh;
+//     text-align: center;
+// `;
 
 
 const SectionSearch = styled.section`

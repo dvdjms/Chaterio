@@ -71,15 +71,25 @@ app.get('/:room', (req, res) => {
 })
 
 
+// app.get('/api/get-reference-number', (req, res) => {
+//   const roomId = uuidV4();
+//   res.json({roomId});
+//   console.log(roomId)
+// });
+
+
 io.on("connection", socket => {
 
      socket.on('join-room', (roomId, userId) => {
 
-      console.log("SERVER", roomId, userId)
+      console.log("SERVER", roomId, userId);
+      socket.to(socket.id).emit("homePage", roomId);
 
-      socket.join(roomId)
-      socket.to(roomId).emit("user-connected", userId)
-      
+
+
+      socket.join(roomId);
+      socket.to(roomId).emit("user-connected", userId);
+
       socket.on("disconnect", () => {
         console.log("SERVER: disconnected David")
         socket.to(roomId).emit("user-disconnected", userId)
