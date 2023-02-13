@@ -5,26 +5,34 @@ import Room from "../components/Room";
 import Login from "../components/Login";
 import Register from "../components/Register";
 import Chaterio from "../components/Chaterio";
-import TestRoom from "../components/TestRoom";
 import VideoCall from "../components/VideoCall";
+
+// import { SocketProvider } from '../providers/Socket';
+// import { PeerProvider } from '../providers/Peer'; 
 
 const Main = () => {
 
-    return (
 
-        <Router>
-            <Routes>
-                <Route path = "/" element={<Home/>} />
-                <Route path = "/chaterio" element={<Chaterio/>} />
-                <Route path = "/room" element={<Room/>} />
-                <Route path = "/login" element={<Login/>} />
-                <Route path = "/register" element={<Register/>} />
-                <Route path = "/testroom/:id" element={<TestRoom/>} />
-                <Route path = "/videocall" element={<VideoCall/>} />
-            </Routes>
-        </Router>
+    return (
+        // <SocketProvider>
+        //     <PeerProvider>
+                <Router>
+                    <Routes>
+                        <Route path = "/" element={<Home/>} />
+                        <Route path = "/chaterio" element={<Chaterio/>} />
+                        <Route path = "/room" element={<Room/>} />
+                        <Route path = "/login" element={<Login/>} />
+                        <Route path = "/register" element={<Register/>} />
+                        <Route path = "/videocall/:roomId" element={<VideoCall/>} />
+                        {/* <Route path="/videocall/" render={(routeProps) => (
+        <VideoCall id={routeProps.location.state.id} />
+      )} /> */}
+
+                    </Routes>
+                </Router>
+    //     </PeerProvider>
+    // </SocketProvider>
     )
 }
-
 
 export default Main;

@@ -8,7 +8,7 @@ const Room = () => {
         <ContainerRoom>
           <Header><AlinkHeader href="/">Chaterio</AlinkHeader></Header>
 
-        <HeaderFive>Room name here</HeaderFive>
+            <HeaderFive>Room name here</HeaderFive>
 
             <VideoSection>
                 <VideoScreen></VideoScreen>

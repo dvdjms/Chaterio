@@ -4,12 +4,9 @@ import Peer from "simple-peer";
 import io from "socket.io-client"
 import "./Chaterio.css"
 import styled from "styled-components";
-
-
 import IconButton from '@mui/material/IconButton';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-// import Button from '@mui/icons-material/Button';
-// import PhoneIcon from '@mui/material/Icon';
+
 
 const socket = io.connect("http://localhost:9000");
 
@@ -24,7 +21,6 @@ function Chaterio() {
     const [idToCall, setIdToCall] = useState("");
     const [callEnded, setCallEnded] = useState(false)
     const [name, setName] = useState("");
-
     const myVideo = useRef();
     const userVideo = useRef();
     const connectionRef = useRef();
@@ -43,9 +39,10 @@ function Chaterio() {
 
         socket.on("me", (id) => {
             setMe(id)
+            console.log("yeah", id)
         })
 
-        socket.on("callUser", (data) => {
+        socket.on("user-connected", (data) => {
             setReceivingCall(true)
             setCaller(data.from)
             setName(data.name)
@@ -59,9 +56,8 @@ function Chaterio() {
             trickle: false,
             stream: stream
         })
-
         peer.on("signal", (data) => {
-            socket.emit("callUser", {
+            socket.emit("user-connected", {
                 userToCall: id,
                 signalData: data,
                 from: me,
@@ -97,11 +93,9 @@ function Chaterio() {
         peer.on("stream", (stream) => {
             userVideo.current.srcObject = stream
         })
-
         peer.signal(callerSignal)
         connectionRef.current = peer
     }
-
     const leaveCall = () => {
         setCallEnded(true)
         connectionRef.current.destroy()
@@ -183,6 +177,7 @@ function Chaterio() {
 }
 
 
+
 const CallButton = styled.div`
 	text-align: center;
 	margin-top: .5rem;
@@ -190,19 +185,15 @@ const CallButton = styled.div`
 	width: 20px;
 	border: solid white;
 `;
-
 const SectionInnerButtons = styled.section`
     width: 90%;
     margin: auto;
 `;
-
 const SectionOuterButtons = styled.section`
     margin-top: 15vh;
     height: 9vh;
     text-align: center;
 `;
-
-
 const RoomButton = styled.button`
     background-color: #10C2C9;
     border: none;
@@ -215,24 +206,18 @@ const RoomButton = styled.button`
     font-weight: 600;
     color: white;
 `;
-
-
 const VideoMe = styled.div`
     float: left;
-
 `;
-
 const VideoYou = styled.div`
     float: left;
  
 `;
-
 const VideoContainer = styled.div`
 	display: grid;
 	grid-template-columns: 1fr;
     /* 1fr 1fr */
 `;
-
 const Container = styled.div`
 	/* display: grid; */
 	grid-template-columns: 7fr 3fr;
@@ -241,31 +226,25 @@ const Container = styled.div`
     display: flex;
     justify-content: center;
 `;
-
 const TextField = styled.input`
     border: solid red;
     height: 25px;
     width: 200px;
 `;
-
 const Button = styled.button`
     border: solid red;
     height: 30px;
     width: 206px;
 `;
-
 // const IconButton = styled.div`
 //     border: solid red;
 // `;
-
 // const AssignmentIcon = styled.div`
 //     border: solid red;
 // `;
-
 const PhoneIcon = styled.span`
     border: solid red;
 `;
-
 const Header = styled.h1`
     color:  #d9005a;
     margin-top: 0;
@@ -274,13 +253,10 @@ const Header = styled.h1`
     text-align: center;
     text-decoration: none;
 `;
-
 const AlinkHeader = styled.a`
     color:  #d9005a;
     text-decoration: none;
 `;
-
-
 const ContainerInput = styled.div`
     border-radius: 5px;
     padding: 1rem;
@@ -290,11 +266,8 @@ const ContainerInput = styled.div`
     position: absolute;
     margin-top: 53vh;
 `;
-
 const OuterContainer = styled.div`
     background-color: #252934;
     min-height: 100vh;
 `;
-
-
 export default Chaterio;
