@@ -6,6 +6,7 @@ import Login from "../components/Login";
 import Register from "../components/Register";
 import Chaterio from "../components/Chaterio";
 import VideoCall from "../components/VideoCall";
+import VideoCallAgain from "../components/VideoCallAgain";
 
 // import { SocketProvider } from '../providers/Socket';
 // import { PeerProvider } from '../providers/Peer'; 
@@ -20,10 +21,11 @@ const Main = () => {
                     <Routes>
                         <Route path = "/" element={<Home/>} />
                         <Route path = "/chaterio" element={<Chaterio/>} />
-                        <Route path = "/room" element={<Room/>} />
+                        <Route path = "/room/:roomId" element={<Room/>} />
                         <Route path = "/login" element={<Login/>} />
                         <Route path = "/register" element={<Register/>} />
                         <Route path = "/videocall/:roomId" element={<VideoCall/>} />
+                        <Route path = "/videocallagain/:roomId" element={<VideoCallAgain/>} />
                         {/* <Route path="/videocall/" render={(routeProps) => (
         <VideoCall id={routeProps.location.state.id} />
       )} /> */}

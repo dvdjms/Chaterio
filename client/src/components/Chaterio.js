@@ -8,7 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 
 
-const socket = io.connect("http://localhost:9000");
+const socket = io.connect("http://localhost:3000");
 
 function Chaterio() {
 

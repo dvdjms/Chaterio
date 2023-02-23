@@ -2,19 +2,31 @@
 	display: grid;
 	grid-template-columns: repeat(auto-fill, 300px);
 	grid-auto-rows: 300px;
-	margin: 2vw;
-	gap: 10px;
+	margin: 1vw;
+	margin-top: 17vh;
+	min-height: 40vh;
+	gap: 25px;
+	/* border:solid white 7px; */
 }
 
 video {
-	width: 300px;
-	height: 300px;
+	border:solid #d9005a 7px;
+	height: auto;
+	max-width: 100%;
+	/* width: 300px;
+	height: 300px; */
 	object-fit: cover;
-	border-radius: 10px;
+	border-radius: 7px;
 	margin-left: 2vw;
+	justify-content: center;
 }
 
-
+#myVideo {
+	border:solid #00c7d9 7px;
+	position: absolute;
+	width: 200px;
+	z-index: 4;
+}
 
 .container {
 	display: grid;

@@ -1,131 +1,145 @@
 import React, { useState, useEffect, useRef } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-// import ReactPlayer from 'react-player'
-import Peer from 'peerjs';
-import { useParams  } from 'react-router-dom';
+import { Peer } from 'peerjs';
+import { useParams  } from 'react-router';
 import "./Chaterio.css";
-// import styled from "styled-components";
 import io from "socket.io-client";
-// import Peer from "simple-peer";
 import styled from "styled-components";
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import "./Chaterio.css"
 
+
+const peer = new Peer(undefined, {
+  host: '/', 
+  port: 9001,
+})
 
 const socket = io.connect("http://localhost:9000");
 
 const VideoCall = () => {
 
-  const [stream, setStream] = useState(null);
-  // const [peers, setPeers] = useState({});
-  const [userId, setUserId] = useState(null);
-  const peers = {};
-
+  const [localStream, setLocalStream] = useState(null);
   const videoGridRef = useRef(null);
-  const myVideo = React.useRef();
-
+  const myVideo = useRef();
+  const peers = {};
+  // const [peerss, setPeers] = useState({})
   const { roomId } = useParams();
-
-  console.log("This is a print from useParams in videocall page ", roomId);
 
 
   useEffect(() => {  
+ 
+    console.log("usee Effect started...")
+
+    peer.on("open", (id) => {
+      socket.emit("join-room", roomId, id);
+    });
+
     navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true
     })
-      .then((stream) => {
-        setStream(stream)
+      .then((localStream) => {
+        setLocalStream(localStream);
         if (myVideo.current) {
-          myVideo.current.srcObject = stream
-        }
-        socket.emit("join-room", roomId, 989);
-        socket.on("user-connected", (userId) => {
-          setUserId(userId)
-          console.log("User connected " + userId)
+          myVideo.current.srcObject = localStream
+          myVideo.current.muted = true
+        };
 
- 
-          // need to run after connection only
-          connectToNewUser(userId, stream)
-
-          socket.on("user-disconnected", (userId) => {
-            if (peers[userId]) peers[userId].close();
-          });
+        // receive calls by listening to the on call event
+        peer.on('call', call => {
+          call.answer(localStream)
+          const video = document.createElement('video')
+          call.on('stream', userVideoStream => {
+             addVideoStream(video, userVideoStream);
+          })
         });
+
+        socket.on("user-connected", (userID) => {
+          // console.log("CLIENT: user connected " + userID, localStream)
+          connectToNewUser(userID, localStream)
+        });
+
+        socket.on("user-disconnected", (userId) => {
+          console.log("user-disconnected", userId)
+          if (peers[userId]) peers[userId].close();
+        });
+
       });
 
   }, []);      
 
-  // useEffect(() => {
-  //   if (myPeer.current) {
-  //     myPeer.current.on("call", (call) => {
-  //       call.answer(stream);
-  //       setVideo(document.createElement("video"));
-  //       call.on('stream', userVideoStream => {
-  //         addVideoStream(video, userVideoStream);
-  //     })
-  //     });
-  //     myPeer.current.on("open", (userId) => {
-  //       socket.emit("join-room", roomId, userId);
-  //       setRoomId(roomId)
-  //       // setUserId(userId)
-  //     });
-  //   }
-  // }, [myPeer, stream]);
-  
-
 
   const connectToNewUser = (userId, stream ) => {
-      const video = document.createElement('video');
-      // socket.on('stream', userVideoStream => {
-        // const call = myPeer.call(userId, stream)
-         addVideoStream(video, stream);
-        //  peer[userId] = call
-      // })
-      //  socket.on('close', () => {
-      //      video.remove();
-      //  })   
-      // setPeers((prevState) => ({ ...prevState, [userId]: call }));
+    // can make calls when new users connect to our room
+    const call = peer.call(userId, stream)
+    const video = document.createElement('video')
+    call.on('stream', userVideoStream => {
+       addVideoStream(video, userVideoStream);
+    })
+    call.on('close', () => {
+      video.remove()
+      peers[userId] = null
+    })
+    peers[userId] = call
+    // setPeerss(prevPeers => ({...prevPeerss, [userId]: call}))
+    // console.log(peers)
+    console.log(peers)
   };
-  
+
+
   const addVideoStream = (video, stream) => {
-    // console.log("NEW STREAM: ", stream)
     video.srcObject = stream;
     video.addEventListener("loadedmetadata", () => {
       video.play();
     });
-    videoGridRef.current.appendChild(video);
+      videoGridRef.current.appendChild(video);
   };
+
 
 
   return (
     <>
       <OuterContainer>
-      <Header><AlinkHeader href="/">Chaterio</AlinkHeader></Header>
-      <Container>
-          <CopyToClipboard text={roomId} style={{ marginBottom: ".5rem" }}>
-              <Button variant="contained" color="primary" starIcon={<AssignmentIcon fontSize="large" />}>
-                  Copy Room Id
-              </Button>
-          </CopyToClipboard>
-        </Container>
-    <div>
-       <div id="video-grid" ref={videoGridRef} />
-      {stream && <video playsInline muted ref={myVideo} autoPlay width={500} height={500} />}
-    </div>
-   
-        <SectionOuterButtons>
-            <SectionInnerButtons>
+        <Header><AlinkHeader href="/">Chaterio</AlinkHeader></Header>
+          <Container>
+            <CopyToClipboard text={roomId} style={{ marginBottom: ".5rem" }}>
+                <Button variant="contained" color="primary" >
+                    Copy Room Id
+                </Button>
+            </CopyToClipboard>
+          </Container>
+          <VideoContainer>
+            <VideoDrag >
+              {localStream && <video id="myVideo" draggable="true" playsInline muted ref={myVideo} autoPlay width={500} height={500} />}
+            </VideoDrag>
+              <div id="video-grid" ref={videoGridRef} />
+          </VideoContainer>
+        
+          <SectionOuterButtons>
+              <SectionInnerButtons>
 
-                <a href="/"><RoomButton>Leave Room</RoomButton></a>
-                <a href="/room"><RoomButton>Join Room</RoomButton></a>
+                  <a href="/"><RoomButton>Leave Room</RoomButton></a>
+                  <a href="/room"><RoomButton>Join Room</RoomButton></a>
 
-            </SectionInnerButtons>
-        </SectionOuterButtons>
+              </SectionInnerButtons>
+          </SectionOuterButtons>
       </OuterContainer>
     </>
   );
 };
+
+
+const VideoDrag = styled.div`
+	z-index: 4;
+	width: 200px;
+	position: absolute;
+`;
+
+const VideoContainer = styled.div`
+	display: grid;
+	grid-template-columns: 1fr;
+  justify-content: center;
+  z-index: 1;
+    /* 1fr 1fr */
+`;
 
 
 const SectionInnerButtons = styled.section`
@@ -134,9 +148,10 @@ const SectionInnerButtons = styled.section`
 `;
 
 const SectionOuterButtons = styled.section`
-    margin-top: 15vh;
+    margin-top: 9vh;
     height: 9vh;
     text-align: center;
+
 `;
 
 const RoomButton = styled.button`
@@ -154,11 +169,13 @@ const RoomButton = styled.button`
 
 const Container = styled.div`
 	/* display: grid; */
-	grid-template-columns: 7fr 3fr;
+	  /* grid-template-columns: 7fr 3fr; */
     height: 10vh;
     min-width: 100vw;
     display: flex;
     justify-content: center;
+    position: absolute;
+
 `;
 
 const Button = styled.button`
@@ -170,10 +187,12 @@ const Button = styled.button`
 const Header = styled.h1`
     color:  #d9005a;
     margin-top: 0;
-    font-size: 17px;
+    font-size: 23px;
     padding-top: 2vh;
     text-align: center;
     text-decoration: none;
+    position: relative;
+
 `;
 const AlinkHeader = styled.a`
     color:  #d9005a;
@@ -183,6 +202,7 @@ const AlinkHeader = styled.a`
 const OuterContainer = styled.div`
     background-color: #252934;
     min-height: 100vh;
+    z-index: -2;
 `;
 
 

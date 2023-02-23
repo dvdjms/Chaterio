@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import { useNavigate } from 'react-router-dom';
 
 const { v4: uuidV4 } = require('uuid')
 
 const HomePage = () => {
+
     const navigate = useNavigate();
-  
     const handleJoinRoom = useCallback(() => {
         const roomId = uuidV4();
-
         navigate(`/videocall/${roomId}`)
     }, [navigate]);
 
