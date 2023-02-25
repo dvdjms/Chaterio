@@ -60,15 +60,11 @@ const SubmitButton = styled.button`
     padding-left: 5vw;
 `;
 
-// const Form = styled.form`
-//     height: 10vh;
-//     text-align: center;
-// `;
-
 
 const SectionSearch = styled.section`
     height: 20vh;
-    margin-top: 7vh;
+    margin-top: 17vh;
+    text-align: center;
 `;
 
 const RoomButton = styled.button`

@@ -4,36 +4,32 @@ import Home from "../components/Home";
 import Room from "../components/Room";
 import Login from "../components/Login";
 import Register from "../components/Register";
-import Chaterio from "../components/Chaterio";
+// import Chaterio from "../components/Chaterio";
 import VideoCall from "../components/VideoCall";
 import VideoCallAgain from "../components/VideoCallAgain";
+import { Peer } from 'peerjs';
 
-// import { SocketProvider } from '../providers/Socket';
-// import { PeerProvider } from '../providers/Peer'; 
+
+const peer = new Peer(undefined, {
+    host: '/', 
+    port: 9001,
+});
 
 const Main = () => {
 
 
     return (
-        // <SocketProvider>
-        //     <PeerProvider>
-                <Router>
-                    <Routes>
-                        <Route path = "/" element={<Home/>} />
-                        <Route path = "/chaterio" element={<Chaterio/>} />
-                        <Route path = "/room/:roomId" element={<Room/>} />
-                        <Route path = "/login" element={<Login/>} />
-                        <Route path = "/register" element={<Register/>} />
-                        <Route path = "/videocall/:roomId" element={<VideoCall/>} />
-                        <Route path = "/videocallagain/:roomId" element={<VideoCallAgain/>} />
-                        {/* <Route path="/videocall/" render={(routeProps) => (
-        <VideoCall id={routeProps.location.state.id} />
-      )} /> */}
-
-                    </Routes>
-                </Router>
-    //     </PeerProvider>
-    // </SocketProvider>
+        <Router>
+            <Routes>
+                <Route path = "/" element={<Home/>} />
+                {/* <Route path = "/chaterio" element={<Chaterio/>} /> */}
+                <Route path = "/room/:roomId" element={<Room/>} />
+                <Route path = "/login" element={<Login/>} />
+                <Route path = "/register" element={<Register/>} />
+                <Route path = "/videocall/:roomId" element={<VideoCall peer={peer} />} />
+                <Route path = "/videocallagain/:roomId" element={<VideoCallAgain/>}/>
+            </Routes>
+        </Router>
     )
 }
 

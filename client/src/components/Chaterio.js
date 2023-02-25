@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import Peer from "simple-peer";
+// import Peer from "simple-peer";
 import io from "socket.io-client"
 import "./Chaterio.css"
 import styled from "styled-components";

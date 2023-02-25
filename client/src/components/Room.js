@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { Peer } from 'peerjs';
+// import { Peer } from 'peerjs';
 import { useParams  } from 'react-router-dom';
 import "./Chaterio.css";
 import io from "socket.io-client";
 import styled from "styled-components";
 
-const myPeer = new Peer(undefined, {
-  host: '/', 
-  port: '9001'
-})
+// const myPeer = new Peer(undefined, {
+//   host: '/', 
+//   port: '9001'
+// })
 
 const socket = io.connect("http://localhost:3000");
 
