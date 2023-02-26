@@ -6,7 +6,7 @@ import Login from "../components/Login";
 import Register from "../components/Register";
 // import Chaterio from "../components/Chaterio";
 import VideoCall from "../components/VideoCall";
-import VideoCallAgain from "../components/VideoCallAgain";
+// import VideoCallAgain from "../components/VideoCallAgain";
 import { Peer } from 'peerjs';
 
 
@@ -27,7 +27,7 @@ const Main = () => {
                 <Route path = "/login" element={<Login/>} />
                 <Route path = "/register" element={<Register/>} />
                 <Route path = "/videocall/:roomId" element={<VideoCall peer={peer} />} />
-                <Route path = "/videocallagain/:roomId" element={<VideoCallAgain/>}/>
+                {/* <Route path = "/videocallagain/:roomId" element={<VideoCallAgain/>}/> */}
             </Routes>
         </Router>
     )

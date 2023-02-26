@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-// import { Peer } from 'peerjs';
 import { useParams  } from 'react-router';
 import "./Chaterio.css";
 import io from "socket.io-client";
@@ -12,9 +11,11 @@ const VideoCall = ({ peer }) => {
 
   const [localStream, setLocalStream] = useState(null);
   const [peers, setPeers] = useState({})
+  // const peers = {};
   const videoGridRef = useRef(null);
   const myVideo = useRef();
   const { roomId } = useParams();
+
 
 
   useEffect(() => {  
@@ -23,6 +24,7 @@ const VideoCall = ({ peer }) => {
 
     peer.on("open", (id) => {
       socket.emit("join-room", roomId, id);
+      // setPeers({[id]: 'First User'})
     });
   
     navigator.mediaDevices.getUserMedia({
@@ -48,35 +50,38 @@ const VideoCall = ({ peer }) => {
 
         socket.on("user-connected", (userID) => {
           connectToNewUser(userID, localStream)
+          console.log("CLIENT: user-connected", userID)
         });
+
 
         socket.on("user-disconnected", (userId) => {
           console.log("CLIENT: user-disconnected", userId)
+    
           if (peers[userId]) peers[userId].close();
+          delete peers[userId];
         });
-        console.log("peers 1", peers);
-
-
       })
       .catch((error) => {
         console.error("Error getting user media: ", error)
       })
-  }, [peers]);
+
+  }, [roomId]);
+  console.log("Peers array: ", peers)
 
 
   const connectToNewUser = (userId, stream) => {
-    // can make calls when new users connect to our room
+    // send local video stream to remote user
     const call = peer.call(userId, stream)
     const video = document.createElement('video')
-    console.log("CLIENT: user-connected", userId)
+    // receive remote video stream
     call.on('stream', remoteStream => {
        addVideoStream(video, remoteStream);
     })
     call.on('close', () => {
       video.remove();
     })
+    // peers[userId] = call
     setPeers(prevPeers => ({ ...prevPeers, [userId]: call }))
-    console.log("peers 2 ", peers)
   };
 
 
@@ -85,11 +90,10 @@ const VideoCall = ({ peer }) => {
     video.addEventListener("loadedmetadata", () => {
       video.play();  
     });
-    if (videoGridRef.current) {
+    // if (videoGridRef.cu rrent) {
       videoGridRef.current.appendChild(video);
-    }
+    // }
   };
-
 
 
   return (
