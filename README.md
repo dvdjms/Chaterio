@@ -1,6 +1,8 @@
 # Capstone Project - Chaterio
 
 <p>A React/Express video chat application that allows a user to join a room and chat with other users.<p>
+<p>This was a very ambitious task to complete within a two week period, and the development process of this application is ongoing.<p>
+<br>
 
 ## Contents
 <p>Technologies</p>
@@ -17,7 +19,8 @@
 <p>Express</p>
 <p>HTML5</p>
 <p>CSS3</p>
-<p>Websockets</p>
+<p>WebRTC</p>
+<p>PeerJS<p>
 <br>
 
 ## Brief
@@ -47,8 +50,6 @@ For the Capstone project, I worked independently to explore WebSocket technologi
     <li>Users can disable their camera.</li>
     <li>Host website on AWS.</li>
 </ul>
-<br>
-This was a very ambitious task to complete within a two week period, and development process of this application is ongoing.
 <br><br>
 
 ## Planning
@@ -56,18 +57,19 @@ This was a very ambitious task to complete within a two week period, and develop
 <p>Learning new technologies was key. YouTube tutorials, documentation for <a href="https://socket.io/docs/v4/" target="_blank">socket.io</a> and <a href="https://peerjs.com/docs/" target="_blank">peerjs</a> helped explore these technologies. The website most similar to my project is <a href="https://meet.jit.si/" target="_blank">jitsi</a> which provides a reasonable framework in which to explore. Further to this the below wireframes helped structure the look of the project.<p>
 <p>It was discovered early on that the main function of the application needs a reletively small amount of code... but indeed very tricky code.<p>
 <br>
-<img src="client/src/static/images/wireframe1.png" width="350"><img>
-<img src="client/src/static/images/wireframe2.png" width="350"><img>
-<img src="client/src/static/images/wireframe3.png" width="350"><img>
+<img src="client/src/static/images/wireframe1.png" width="500"><img>
+<br>
+<img src="client/src/static/images/wireframe2.png" width="500"><img>
+<br>
+<img src="client/src/static/images/wireframe3.png" width="500"><img>
 <br><br>
 
 ## Installation
 <br>
 
 <p>You'll need socket.io, socket.io-client, peerjs, styled-components installed. Ensure you navigate to the correct folder when installing e.g. socket.io in server folder and socket.io-client in client folder.<p>
-<br>
-
 <p>You will need to run the front end, and two backend servers using three terminal windows.<p>
+<br>
 
 Start React application:
 ```
