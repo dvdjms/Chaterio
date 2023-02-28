@@ -5,6 +5,7 @@
 ## Contents
 <p>Technologies</p>
 <p>Brief</p> 
+<p>Planning</p> 
 <p>Installation</p> 
 <br>
 
@@ -21,12 +22,12 @@
 
 ## Brief
 <br>
-For the Capstone project, I worked independently to explore WebSocket technologies, such as socket.io and peerjs, by creating a video chat application. A rather ambitious task that went beyond the curriculum and provided a massive learning curve. This will remain by passion project until fully functioning.
+For the Capstone project, I worked independently to explore WebSocket technologies, such as socket.io and peerjs, by creating a video chat application. A rather ambitious task that went beyond the curriculum and provided a massive learning curve. This will remain my passion/experimental project until fully functioning. Current bugs include multiple renders of the video and jerky responses when a new user enters a room. Testing has also become difficult with exploration in https certification, tunnelling via Tailscale, and Chromium. WIP.
 <br><br>
 
 ### MVP
 <br>
-A user should be able to...</p>
+<p>A user should be able to...<p>
 <ul>
     <li>Users will be able to log on by entering their name.</li>
     <li>Users will be able to join a room via a room name.</li>
@@ -37,10 +38,8 @@ A user should be able to...</p>
 </uL>
 <br>
 
-
 ### Extensions:
 <ul>
-    <li>A room can host multiple users</li>
     <li>Users can join rooms with multiple users.</li>
     <li>Users can text other users with CRUD actions.</li>
     <li>Users can randomly join a room with strangers.</li>
@@ -49,22 +48,37 @@ A user should be able to...</p>
     <li>Host website on AWS.</li>
 </ul>
 <br>
-
 This was a very ambitious task to complete within a two week period, and development process of this application is ongoing.
+<br><br>
+
+## Planning
+<br>
+<p>Learning new technologies was key. YouTube tutorials, documentation for <a href="https://socket.io/docs/v4/" target="_blank">socket.io</a> and <a href="https://peerjs.com/docs/" target="_blank">peerjs</a> helped explore these technologies. The website most similar to my project is <a href="https://meet.jit.si/" target="_blank">jitsi</a> which provides a reasonable framework in which to explore. Further to this the below wireframes helped structure the look of the project.<p>
+<p>It was discovered early on that the main function of the application needs a reletively small amount of code... but indeed very tricky code.<p>
+<br>
+<img src="client/src/static/images/wireframe1.png" width="350"><img>
+<img src="client/src/static/images/wireframe2.png" width="350"><img>
+<img src="client/src/static/images/wireframe3.png" width="350"><img>
 <br><br>
 
 ## Installation
 <br>
 
-<p>You'll need Express, socket.io, peerjs installed to run this.<p>
+<p>You'll need socket.io, socket.io-client, peerjs, styled-components installed. Ensure you navigate to the correct folder when installing e.g. socket.io in server folder and socket.io-client in client folder.<p>
 <br>
 
-<p>You will need to run the front end, and two backend servers: express and peerjs<p>
+<p>You will need to run the front end, and two backend servers using three terminal windows.<p>
 
-
+Start React application:
 ```
 npm start
+```
+Start Express server:
+```
 npm run server:dev
+```
+Start peerjs server:
+```
 peerjs --port 9001
 ```
 
