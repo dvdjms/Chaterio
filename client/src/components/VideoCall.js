@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useParams  } from 'react-router';
 import "./Chaterio.css";
@@ -7,10 +7,11 @@ import styled from "styled-components";
 
 const socket = io.connect("http://localhost:9000");
 
+
 const VideoCall = ({ peer }) => {
 
   const [localStream, setLocalStream] = useState(null);
-  const [peers, setPeers] = useState({})
+  const [peers, setPeers] = useState([])
   // const peers = {};
   const videoGridRef = useRef(null);
   const myVideo = useRef();
@@ -20,8 +21,8 @@ const VideoCall = ({ peer }) => {
 
   useEffect(() => {  
 
-    console.log("useEffect started...")
-
+    console.log("useEffect started...");
+  
     peer.on("open", (id) => {
       socket.emit("join-room", roomId, id);
       // setPeers({[id]: 'First User'})
@@ -53,20 +54,21 @@ const VideoCall = ({ peer }) => {
           console.log("CLIENT: user-connected", userID)
         });
 
-
         socket.on("user-disconnected", (userId) => {
           console.log("CLIENT: user-disconnected", userId)
-    
           if (peers[userId]) peers[userId].close();
-          delete peers[userId];
+          deleteUser(userId)
         });
+
       })
       .catch((error) => {
         console.error("Error getting user media: ", error)
       })
 
-  }, [roomId]);
+      return () => console.log("Cleanup")
+  }, []);
   console.log("Peers array: ", peers)
+
 
 
   const connectToNewUser = (userId, stream) => {
@@ -90,10 +92,19 @@ const VideoCall = ({ peer }) => {
     video.addEventListener("loadedmetadata", () => {
       video.play();  
     });
-    // if (videoGridRef.cu rrent) {
+    // if (videoGridRef.current) {
       videoGridRef.current.appendChild(video);
     // }
   };
+
+
+  const deleteUser = (userId) => {
+    const filteredItems = peers.filter((key) => key !== userId);
+    setPeers(filteredItems);
+    console.log("test 3 ", filteredItems)
+  };
+
+
 
 
   return (
