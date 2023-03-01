@@ -67,7 +67,21 @@ For the Capstone project, I worked independently to explore WebSocket technologi
 ## Installation
 <br>
 
-<p>You'll need socket.io, socket.io-client, peerjs, styled-components installed. Ensure you navigate to the correct folder when installing e.g. socket.io in server folder and socket.io-client in client folder.<p>
+<p>You'll need socket.io, socket.io-client, peerjs, express, styled-components, uuid installed. Ensure you navigate to the correct folder when installing e.g. socket.io in server folder and socket.io-client in client folder.<p>
+<br>
+
+Client folder:
+
+```
+npm install socket.io-client styled-components uuid
+```
+
+Server folder:
+```
+npm install socket.io peerjs express
+```
+
+<br>
 <p>You will need to run the front end, and two backend servers using three terminal windows.<p>
 <br>
 
@@ -83,6 +97,7 @@ Start peerjs server:
 ```
 peerjs --port 9001
 ```
+
 
 
 <br>

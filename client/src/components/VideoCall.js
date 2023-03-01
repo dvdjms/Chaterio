@@ -66,6 +66,7 @@ const VideoCall = ({ peer }) => {
       })
 
       return () => console.log("Cleanup")
+      
   }, []);
   console.log("Peers array: ", peers)
 
