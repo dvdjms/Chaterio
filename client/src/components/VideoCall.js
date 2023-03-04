@@ -18,7 +18,6 @@ const VideoCall = ({ peer }) => {
   const { roomId } = useParams();
 
 
-
   useEffect(() => {  
 
     console.log("useEffect started...");
@@ -36,6 +35,7 @@ const VideoCall = ({ peer }) => {
         setLocalStream(localStream);
         if (myVideo.current) {
           myVideo.current.srcObject = localStream
+          
           myVideo.current.muted = true
         };
 
@@ -43,9 +43,8 @@ const VideoCall = ({ peer }) => {
         peer.on('call', call => {
           call.answer(localStream)
           const video = document.createElement('video')
-          call.on('stream', userVideoStream => {
-            call.answer(userVideoStream);
-            addVideoStream(video, userVideoStream);
+          call.on('stream', remoteStream => {
+            addVideoStream(video, remoteStream);
           });
         });
 
@@ -66,7 +65,7 @@ const VideoCall = ({ peer }) => {
       })
 
       return () => console.log("Cleanup")
-      
+
   }, []);
   console.log("Peers array: ", peers)
 
@@ -74,11 +73,12 @@ const VideoCall = ({ peer }) => {
 
   const connectToNewUser = (userId, stream) => {
     // send local video stream to remote user
+    console.log("userid25", userId)
     const call = peer.call(userId, stream)
     const video = document.createElement('video')
     // receive remote video stream
     call.on('stream', remoteStream => {
-       addVideoStream(video, remoteStream);
+       addVideoStream(video, remoteStream, userId);
     })
     call.on('close', () => {
       video.remove();
@@ -88,14 +88,23 @@ const VideoCall = ({ peer }) => {
   };
 
 
-  const addVideoStream = (video, stream) => {
+  const addVideoStream = (video, stream, user) => {
+    console.log("userId37", user)
     video.srcObject = stream;
     video.addEventListener("loadedmetadata", () => {
       video.play();  
     });
+
+    // const videoWrapper = document.createElement('div');
+    // videoWrapper.innerText = `User: ${user}`; // add your text here
+    // videoWrapper.appendChild(video);
+    // videoGridRef.current.appendChild(videoWrapper);
+
     // if (videoGridRef.current) {
       videoGridRef.current.appendChild(video);
     // }
+
+
   };
 
 
@@ -107,21 +116,21 @@ const VideoCall = ({ peer }) => {
 
 
 
-
   return (
     <>
       <OuterContainer>
         <Header><AlinkHeader href="/">Chaterio</AlinkHeader></Header>
           <Container>
-            <CopyToClipboard text={roomId} style={{ marginBottom: ".5rem" }}>
+            <CopyToClipboard text={"http://localhost:3000/videocall/" + roomId} style={{ marginBottom: ".5rem" }}>
                 <Button variant="contained" color="primary" >
-                    Copy Room Id
+                    Copy Room URL
                 </Button>
             </CopyToClipboard>
           </Container>
           <VideoContainer>
             <VideoDrag >
               {localStream && <video id="myVideo" draggable="true" playsInline muted ref={myVideo} autoPlay width={500} height={500} />}
+            {/* <UserName>Host</UserName> */}
             </VideoDrag>
               <div id="video-grid" ref={videoGridRef} />
           </VideoContainer>
@@ -130,7 +139,7 @@ const VideoCall = ({ peer }) => {
               <SectionInnerButtons>
 
                   <a href="/"><RoomButton>Leave Room</RoomButton></a>
-                  <a href="/room"><RoomButton>Join Room</RoomButton></a>
+                  <a href="/room"><RoomButton>Change Room</RoomButton></a>
 
               </SectionInnerButtons>
           </SectionOuterButtons>
@@ -140,8 +149,24 @@ const VideoCall = ({ peer }) => {
 };
 
 
+
+
+// const UserName = styled.h6`
+//   background-color: #252934;
+//   opacity: .7;
+//   border-radius: 5px;
+//   font-size: 16px;
+//   color: white;
+//   width: fit-content;
+//   margin: auto;
+//   margin-top: 17.5vh;
+//   padding: 2px 5px 2px 5px;
+//   position: relative;
+//   z-index: 4;
+// `;
+
 const VideoDrag = styled.div`
-	z-index: 4;
+	z-index: 2;
 	width: 200px;
 	position: absolute;
   margin-left: 1vw;
@@ -153,7 +178,6 @@ const VideoContainer = styled.div`
   justify-content: center;
   z-index: 1;
 `;
-
 
 const SectionInnerButtons = styled.section`
     width: 90%;
