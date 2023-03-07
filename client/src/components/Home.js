@@ -26,15 +26,15 @@ const HomePage = () => {
 
     return (
         <ContainerHome>
-            <Logo alt="people talking on laptop" src={logo}></Logo>
+            <Logo alt="Chaterio logo" draggable="false" src={logo}></Logo>
  
-            <Image alt="people talking on laptop" src={picture}></Image>
+            <Image alt="people talking on laptop" draggable="false" src={picture}></Image>
 
             <Header></Header>
             <Paragraph>Chat to your friends for free. No account needed!</Paragraph>
 
             <SectionSearch>
-                <InputField id="RoomName" name="RoomName" placeholder="Enter Room Name" ref={inputRoomName} type="text" oninput="this.value = this.value.replace(/[^a-z]/, '')"></InputField>
+                <InputField id="RoomName" name="RoomName" placeholder="Enter Room Name" ref={inputRoomName} type="text"></InputField>
                 <SubmitButton onClick={handleJoinRoom} type="submit">Start meeting</SubmitButton>
             </SectionSearch>
         </ContainerHome>

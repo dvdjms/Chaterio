@@ -4,21 +4,29 @@ import { useParams  } from 'react-router';
 import "./Chaterio.css";
 import io from "socket.io-client";
 import styled from "styled-components";
-
-const socket = io.connect("http://localhost:9000");
+import logo from "../static/images/chaterioLogo.png"
 
 
 const VideoCall = ({ peer }) => {
 
   const [localStream, setLocalStream] = useState(null);
-  const [peers, setPeers] = useState([])
+  const [peers, setPeers] = useState([]);
+
+  // const [nameEntered, setNameEntered] = useState(true);
+  // const [nameToShow, setNameToShow] = useState("");
+  // const [cameraEnabled, setCameraEnabled] = useState(false)
+
+  const [buttonText, setButtonText] = useState("Copy Room URL")
   // const peers = {};
   const videoGridRef = useRef(null);
-  const myVideo = useRef();
+  // const userName = useRef(null);
+  const myVideo = useRef();  
   const { roomId } = useParams();
 
 
   useEffect(() => {  
+
+    const socket = io.connect("http://localhost:9000");
 
     console.log("useEffect started...");
   
@@ -35,7 +43,6 @@ const VideoCall = ({ peer }) => {
         setLocalStream(localStream);
         if (myVideo.current) {
           myVideo.current.srcObject = localStream
-          
           myVideo.current.muted = true
         };
 
@@ -49,11 +56,13 @@ const VideoCall = ({ peer }) => {
         });
 
         socket.on("user-connected", (userID) => {
+          // send local stream to new user
           connectToNewUser(userID, localStream)
           console.log("CLIENT: user-connected", userID)
         });
 
         socket.on("user-disconnected", (userId) => {
+  
           console.log("CLIENT: user-disconnected", userId)
           if (peers[userId]) peers[userId].close();
           deleteUser(userId)
@@ -64,10 +73,17 @@ const VideoCall = ({ peer }) => {
         console.error("Error getting user media: ", error)
       })
 
-      return () => console.log("Cleanup")
+      return () => {
+        console.log("Cleanup")
+        // socket.off('user-connected');
+        // socket.off('user-disconnected');
+        // socket.disconnect();
+        socket.close();
+      };
 
-  }, []);
-  console.log("Peers array: ", peers)
+  },[]);
+
+  console.log("Print peers", peers)
 
 
 
@@ -78,7 +94,7 @@ const VideoCall = ({ peer }) => {
     const video = document.createElement('video')
     // receive remote video stream
     call.on('stream', remoteStream => {
-       addVideoStream(video, remoteStream, userId);
+       addVideoStream(video, remoteStream);
     })
     call.on('close', () => {
       video.remove();
@@ -88,13 +104,11 @@ const VideoCall = ({ peer }) => {
   };
 
 
-  const addVideoStream = (video, stream, user) => {
-    console.log("userId37", user)
+  const addVideoStream = (video, stream) => {
     video.srcObject = stream;
     video.addEventListener("loadedmetadata", () => {
       video.play();  
     });
-
     // const videoWrapper = document.createElement('div');
     // videoWrapper.innerText = `User: ${user}`; // add your text here
     // videoWrapper.appendChild(video);
@@ -103,52 +117,76 @@ const VideoCall = ({ peer }) => {
     // if (videoGridRef.current) {
       videoGridRef.current.appendChild(video);
     // }
-
-
   };
 
 
   const deleteUser = (userId) => {
     const filteredItems = peers.filter((key) => key !== userId);
     setPeers(filteredItems);
-    console.log("test 3 ", filteredItems)
+    // console.log("test 3 ", filteredItems)
   };
 
+  const changeText = () => {
+    setButtonText("Copied to clipboard");
+    setTimeout(() => setButtonText("Copy Room URL"), [2000])
+  };
+
+
+  
+  // const onNameSubmit = () => {
+  //   setNameEntered((prev) => (!prev));
+  //   setCameraEnabled(true);
+  //   const nameUser = userName.current.value;
+  //   setNameToShow(nameUser);
+  // };
 
 
   return (
     <>
+      {/* {nameEntered && (
+      <EnterNameContainer>
+          <input ref={userName} type="text" placeholder="Enter name"></input>
+          <button type="submit" onClick={onNameSubmit}>Join Chat</button>
+      </EnterNameContainer>
+      )} */}
+
       <OuterContainer>
-        <Header><AlinkHeader href="/">Chaterio</AlinkHeader></Header>
-          <Container>
+
+        <Header>
+            <Logo alt="Chaterio logo" draggable="false" src={logo} ></Logo>
+        </Header>
+
+        <InnerContainer>
+          <CopyToClipboardContainer>
             <CopyToClipboard text={"http://localhost:3000/videocall/" + roomId} style={{ marginBottom: ".5rem" }}>
-                <Button variant="contained" color="primary" >
-                    Copy Room URL
-                </Button>
+                <CopyToClipboardButton variant="contained" color="primary" onClick={changeText}>
+                    {buttonText}
+                </CopyToClipboardButton>
             </CopyToClipboard>
-          </Container>
+          </CopyToClipboardContainer>
+          </InnerContainer>
+
           <VideoContainer>
             <VideoDrag >
               {localStream && <video id="myVideo" draggable="true" playsInline muted ref={myVideo} autoPlay width={500} height={500} />}
-            {/* <UserName>Host</UserName> */}
+            {/* <UserName>{nameToShow}</UserName> */}
             </VideoDrag>
+
               <div id="video-grid" ref={videoGridRef} />
+
           </VideoContainer>
         
           <SectionOuterButtons>
               <SectionInnerButtons>
-
                   <a href="/"><RoomButton>Leave Room</RoomButton></a>
                   <a href="/room"><RoomButton>Change Room</RoomButton></a>
-
               </SectionInnerButtons>
           </SectionOuterButtons>
+
       </OuterContainer>
     </>
   );
 };
-
-
 
 
 // const UserName = styled.h6`
@@ -164,6 +202,29 @@ const VideoCall = ({ peer }) => {
 //   position: relative;
 //   z-index: 4;
 // `;
+
+// const EnterNameContainer = styled.div`
+//   background-color: black;
+//   height: 75vh;
+//   margin: auto;
+//   width: 75vw;
+//   border: solid red;
+//   z-index: 3;
+//   position: absolute;
+//   opacity: .9;
+// `;
+
+
+
+const Logo = styled.img`
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  justify-content: center;
+  width: 140px;
+  z-index: 1;
+`;
 
 const VideoDrag = styled.div`
 	z-index: 2;
@@ -188,13 +249,12 @@ const SectionOuterButtons = styled.section`
     padding-bottom: 3vh;
     height: 9vh;
     text-align: center;
-
 `;
 
 const RoomButton = styled.button`
     background-color: #10C2C9;
     border: none;
-    border-radius: 2vw;
+    border-radius: .5vw;
     height: 8vh;
     width: 37vw;
     margin-left: 3vw;
@@ -202,36 +262,46 @@ const RoomButton = styled.button`
     font-size: 18px;
     font-weight: 600;
     color: white;
+    @media (min-width: 676px) {
+      width: 27vw;
+    }
 `;
 
-const Container = styled.div`
-	/* display: grid; */
-	  /* grid-template-columns: 7fr 3fr; */
-    height: 10vh;
+const CopyToClipboardContainer = styled.div`
+    height: vh;
+    margin-top: 8vh;
     min-width: 100vw;
     display: flex;
     justify-content: center;
     position: absolute;
 `;
 
-const Button = styled.button`
-    border: solid red;
-    height: 30px;
-    width: 206px;
+const CopyToClipboardButton = styled.button`
+    border-radius: .5vw;
+    border: solid #10C2C9;
+    height: 25px;
+    width: 130px;
+    &:hover {
+      background-color: #10C2C9;
+      color: white;
+    }
+    &:active {
+      background-color: black;
+    }
 `;
 
 const Header = styled.h1`
-    color:  #d9005a;
     margin-top: 0;
-    font-size: 23px;
-    padding-top: 2vh;
-    text-align: center;
-    text-decoration: none;
-    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    height: 9vh;
+    padding-top: 1vh;
+    position: absolute;
 `;
-const AlinkHeader = styled.a`
-    color:  #d9005a;
-    text-decoration: none;
+
+const InnerContainer = styled.div`
+  padding-top: 3.5vh;
 `;
 
 const OuterContainer = styled.div`
