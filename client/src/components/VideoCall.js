@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useParams  } from 'react-router';
+import Draggable from 'react-draggable';
 import "./Chaterio.css";
 import io from "socket.io-client";
 import styled from "styled-components";
@@ -11,15 +12,17 @@ const VideoCall = ({ peer }) => {
 
   const [localStream, setLocalStream] = useState(null);
   const [peers, setPeers] = useState([]);
+  const peers1 = {};
 
-  // const [nameEntered, setNameEntered] = useState(true);
-  // const [nameToShow, setNameToShow] = useState("");
+  const [nameInputted, setNameInputted] = useState(true);
+  const [nameToShowOnVideo, setNameToShowOnVideo] = useState("");
+
   // const [cameraEnabled, setCameraEnabled] = useState(false)
 
   const [buttonText, setButtonText] = useState("Copy Room URL")
-  // const peers = {};
   const videoGridRef = useRef(null);
-  // const userName = useRef(null);
+  const nodeRef = useRef(null);
+  const userName = useRef(null);
   const myVideo = useRef();  
   const { roomId } = useParams();
 
@@ -27,12 +30,9 @@ const VideoCall = ({ peer }) => {
   useEffect(() => {  
 
     const socket = io.connect("http://localhost:9000");
-
-    console.log("useEffect started...");
   
     peer.on("open", (id) => {
       socket.emit("join-room", roomId, id);
-      // setPeers({[id]: 'First User'})
     });
   
     navigator.mediaDevices.getUserMedia({
@@ -62,9 +62,10 @@ const VideoCall = ({ peer }) => {
         });
 
         socket.on("user-disconnected", (userId) => {
-  
           console.log("CLIENT: user-disconnected", userId)
-          if (peers[userId]) peers[userId].close();
+          // query below - this should close the video!
+          
+          if (peers1[userId]) peers1[userId].close();
           deleteUser(userId)
         });
 
@@ -74,22 +75,14 @@ const VideoCall = ({ peer }) => {
       })
 
       return () => {
-        console.log("Cleanup")
-        // socket.off('user-connected');
-        // socket.off('user-disconnected');
-        // socket.disconnect();
         socket.close();
       };
-
   },[]);
 
-  console.log("Print peers", peers)
-
-
+  // console.log("Print peers", peers)
 
   const connectToNewUser = (userId, stream) => {
     // send local video stream to remote user
-    console.log("userid25", userId)
     const call = peer.call(userId, stream)
     const video = document.createElement('video')
     // receive remote video stream
@@ -99,8 +92,9 @@ const VideoCall = ({ peer }) => {
     call.on('close', () => {
       video.remove();
     })
-    // peers[userId] = call
+    peers1[userId] = call
     setPeers(prevPeers => ({ ...prevPeers, [userId]: call }))
+
   };
 
 
@@ -131,19 +125,18 @@ const VideoCall = ({ peer }) => {
     setTimeout(() => setButtonText("Copy Room URL"), [2000])
   };
 
-
   
   // const onNameSubmit = () => {
-  //   setNameEntered((prev) => (!prev));
-  //   setCameraEnabled(true);
-  //   const nameUser = userName.current.value;
-  //   setNameToShow(nameUser);
+  //   setNameInputted((prev) => (!prev));
+  //   // setCameraEnabled(true);
+  //   const userNamed = userName.current.value;
+  //   setNameToShowOnVideo(userNamed);
   // };
 
 
   return (
     <>
-      {/* {nameEntered && (
+      {/* {nameInputted && (
       <EnterNameContainer>
           <input ref={userName} type="text" placeholder="Enter name"></input>
           <button type="submit" onClick={onNameSubmit}>Join Chat</button>
@@ -164,17 +157,20 @@ const VideoCall = ({ peer }) => {
                 </CopyToClipboardButton>
             </CopyToClipboard>
           </CopyToClipboardContainer>
-          </InnerContainer>
+        </InnerContainer>
 
-          <VideoContainer>
-            <VideoDrag >
-              {localStream && <video id="myVideo" draggable="true" playsInline muted ref={myVideo} autoPlay width={500} height={500} />}
-            {/* <UserName>{nameToShow}</UserName> */}
-            </VideoDrag>
-
+    
+          <VideoContainer >
+            <Draggable nodeRef={nodeRef}>
+              <VideoDrag ref={nodeRef}>
+                {localStream && <video id="myVideo" playsInline muted ref={myVideo} autoPlay width={500} height={500} />}
+      
+                {/* <UserName>{nameToShowOnVideo}</UserName> */}
+              </VideoDrag>
+            </Draggable>
               <div id="video-grid" ref={videoGridRef} />
-
           </VideoContainer>
+  
         
           <SectionOuterButtons>
               <SectionInnerButtons>
@@ -213,7 +209,6 @@ const VideoCall = ({ peer }) => {
 //   position: absolute;
 //   opacity: .9;
 // `;
-
 
 
 const Logo = styled.img`
