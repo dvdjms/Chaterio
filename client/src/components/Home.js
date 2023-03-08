@@ -1,6 +1,6 @@
 import React, { useRef, useCallback } from "react";
-import styled from "styled-components";
 import { useNavigate } from 'react-router-dom';
+import styled from "styled-components";
 import picture from "../static/images/backgroundpicture.jpg"
 import logo from "../static/images/chaterioLogo.png"
 
@@ -108,30 +108,6 @@ const SectionSearch = styled.section`
     padding-top: 4vh;
     position: relative;
     z-index: 1;
-
-`;
-
-const RoomButton = styled.button`
-    background-color: #10C2C9;
-    border: none;
-    border-radius: .5vw;
-    height: 8vh;
-    width: 37vw;
-    margin-left: 3vw;
-    margin-right: 3vw;
-    font-size: 18px;
-    font-weight: 600;
-    color: white;
-`;
-
-const SectionInnerButtons = styled.section`
-    width: 90%;
-    margin: auto;
-`;
-
-const SectionOuterButtons = styled.section`
-    height: 9vh;
-    text-align: center;
 `;
 
 const Header = styled.h1`
