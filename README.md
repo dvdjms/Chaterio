@@ -1,7 +1,7 @@
 # Capstone Project - Chaterio
 
 <p>A React/Express video chat application that allows a user to join a room and chat with other users.<p>
-<p>This was a very ambitious task to complete within a two week period, and the development process of this application is ongoing.<p>
+<p>This was a very ambitious task to complete within a two week period, and although the basic video calling is functioning the development process of this application is ongoing.<p>
 <br>
 
 ## Contents
@@ -25,7 +25,7 @@
 
 ## Brief
 <br>
-For the Capstone project, I worked independently to explore WebSocket technologies, such as socket.io and peerjs, by creating a video chat application. A rather ambitious task that went beyond the curriculum and provided a massive learning curve. This will remain my passion/experimental project until fully functioning. Current bugs include multiple renders of the video and jerky responses when a new user enters a room. Testing has also become difficult with exploration in https certification, tunnelling via Tailscale, and Chromium. WIP.
+For the Capstone project, I worked independently to explore WebSocket technologies, including socket.io and peerjs, by creating a video chat application. A rather ambitious task that went beyond the curriculum and provided a massive learning curve. MVP has been met but is a little buggy here and there. Testing has proved difficult with exploration in https certification, tunnelling via Tailscale, and Chromium. This will remain my passion/experimental project. WIP.
 <br><br>
 
 ### MVP

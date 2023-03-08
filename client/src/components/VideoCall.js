@@ -159,7 +159,6 @@ const VideoCall = ({ peer }) => {
           </CopyToClipboardContainer>
         </InnerContainer>
 
-    
           <VideoContainer >
             <Draggable nodeRef={nodeRef}>
               <VideoDrag ref={nodeRef}>

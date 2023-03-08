@@ -26,10 +26,14 @@ video {
 }
 
 #myVideo {
-	border:solid #00c7d9 7px;
+	border:solid #00c7d9 5px;
 	position: absolute;
 	width: 180px;
 	z-index: 4;
+}
+
+#myVideo:hover {
+	box-shadow:0 0 5px #e2e2e2;
 }
 
 .container {
@@ -44,7 +48,6 @@ video {
 	align-content: center;
 	margin-top: 10rem;
 	margin-left: 10rem;
-	border: blue solid;
 }
 
 
