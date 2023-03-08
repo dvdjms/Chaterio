@@ -17,6 +17,7 @@ const VideoCall = ({ peer }) => {
 
   const [nameInputted, setNameInputted] = useState(true);
   const [nameToShowOnVideo, setNameToShowOnVideo] = useState("");
+  const [muteMicrophone, setMuteMicrophone] = useState(true)
 
   // const [cameraEnabled, setCameraEnabled] = useState(false)
 
@@ -65,11 +66,9 @@ const VideoCall = ({ peer }) => {
         socket.on("user-disconnected", (userId) => {
           console.log("CLIENT: user-disconnected", userId)
           // query below - this should close the video!
-          
           if (peers1[userId]) peers1[userId].close();
           deleteUser(userId)
         });
-
       })
       .catch((error) => {
         console.error("Error getting user media: ", error)
@@ -121,11 +120,18 @@ const VideoCall = ({ peer }) => {
     // console.log("test 3 ", filteredItems)
   };
 
-  const changeText = () => {
+  const handleChangeText = () => {
     setButtonText("Copied to clipboard");
     setTimeout(() => setButtonText("Copy Room URL"), [2000])
   };
 
+
+  const handleMuteMicrophone = () => {
+    setMuteMicrophone((w) => !w)
+    console.log("muted")
+  };
+
+  console.log(muteMicrophone)
   
   // const onNameSubmit = () => {
   //   setNameInputted((prev) => (!prev));
@@ -154,7 +160,7 @@ const VideoCall = ({ peer }) => {
         <InnerContainer>
           <CopyToClipboardContainer>
             <CopyToClipboard text={"http://localhost:3000/videocall/" + roomId} style={{ marginBottom: ".5rem" }}>
-                <CopyToClipboardButton variant="contained" color="primary" onClick={changeText}>
+                <CopyToClipboardButton variant="contained" color="primary" onClick={handleChangeText}>
                     {buttonText}
                 </CopyToClipboardButton>
             </CopyToClipboard>
@@ -175,7 +181,7 @@ const VideoCall = ({ peer }) => {
           <SectionOuterButtons>
               <SectionInnerButtons>
                   <a href="/"><RoomButton>Leave Room</RoomButton></a>
-                  <a href="/room"><RoomButton>Change Room</RoomButton></a>
+                 <RoomButton onClick={handleMuteMicrophone}>Change Room</RoomButton>
               </SectionInnerButtons>
           </SectionOuterButtons>
       </OuterContainer>

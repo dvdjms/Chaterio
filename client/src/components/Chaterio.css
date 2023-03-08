@@ -10,14 +10,15 @@
 	gap: 12px;
 	padding-bottom: 5vh;
 	overflow-y: scroll; 
-	border:  #252934 solid 5px;
+	border: #252934 solid 5px;
 	border-radius: 17px;
-	background-color: #d9d9d1;
+	background-color: rgb(217, 217, 209, .75);
 }
 
 video {
 	border: solid #252934 1.5px;
-	height: auto;
+	background-color: black;
+	height: 100%;
 	max-width: 100%;
 	object-fit: cover;
 	border-radius: 7px;
@@ -29,8 +30,10 @@ video {
 #myVideo {
 	border:solid #00c7d9 5px;
 	position: absolute;
+	height: 135px;
 	width: 180px;
 	z-index: 4;
+	background-color: black;
 }
 
 #myVideo:hover {

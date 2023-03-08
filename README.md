@@ -1,7 +1,7 @@
 # Capstone Project - Chaterio
 
 <p>A React/Express video chat application that allows a user to join a room and chat with other users.<p>
-<p>This was a very ambitious task to complete within a two week period, and although the basic video calling is functioning the development process of this application is ongoing.<p>
+<p>This was a very ambitious task to complete within a two week period, and although the basic video calling is functioning it remains a little buggy, thus development process of this application is ongoing.<p>
 <br>
 
 ## Contents
@@ -78,7 +78,7 @@ npm install socket.io-client styled-components uuid
 
 Server folder:
 ```
-npm install socket.io peerjs express
+npm install socket.io peerjs express nodemon
 ```
 
 <br>
