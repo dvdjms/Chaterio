@@ -6,6 +6,7 @@ import "./Chaterio.css";
 import io from "socket.io-client";
 import styled from "styled-components";
 import logo from "../static/images/chaterioLogo.png"
+import picture from "../static/images/backgroundpicture.jpg"
 
 
 const VideoCall = ({ peer }) => {
@@ -144,6 +145,7 @@ const VideoCall = ({ peer }) => {
       )} */}
 
       <OuterContainer>
+      <Image alt="people talking on laptop" draggable="false" src={picture}></Image>
 
         <Header>
             <Logo alt="Chaterio logo" draggable="false" src={logo} ></Logo>
@@ -170,14 +172,12 @@ const VideoCall = ({ peer }) => {
               <div id="video-grid" ref={videoGridRef} />
           </VideoContainer>
   
-        
           <SectionOuterButtons>
               <SectionInnerButtons>
                   <a href="/"><RoomButton>Leave Room</RoomButton></a>
                   <a href="/room"><RoomButton>Change Room</RoomButton></a>
               </SectionInnerButtons>
           </SectionOuterButtons>
-
       </OuterContainer>
     </>
   );
@@ -299,11 +299,20 @@ const InnerContainer = styled.div`
 `;
 
 const OuterContainer = styled.div`
-    background-color: #252934;
     min-height: 100vh;
-    z-index: -2;
+    min-width: 100vw;
+    background-color: #252934;
+    position: absolute;
+    z-index: -1;
 `;
 
+const Image = styled.img`
+    filter: blur(4px) brightness(30%);
+    height: 100vh;
+    width: 100vw;
+    z-index: -1;
+    position: absolute;
+`;
 
 
 export default VideoCall;
