@@ -12,27 +12,21 @@ import picture from "../static/images/backgroundpicture.jpg"
 const VideoCall = ({ peer }) => {
 
   const [localStream, setLocalStream] = useState(null);
-  const [peers, setPeers] = useState([]);
-  const peers1 = {};
-
-  const [nameInputted, setNameInputted] = useState(true);
-  const [nameToShowOnVideo, setNameToShowOnVideo] = useState("");
-  const [muteMicrophone, setMuteMicrophone] = useState(true)
-
-  // const [cameraEnabled, setCameraEnabled] = useState(false)
-
   const [buttonText, setButtonText] = useState("Copy Room URL")
+  const [peers, setPeers] = useState([]);
   const videoGridRef = useRef(null);
   const nodeRef = useRef(null);
-  const userName = useRef(null);
   const myVideo = useRef();  
   const { roomId } = useParams();
+  const peers1 = {};
 
+  // const serverConnect = "https://60bf-92-1-199-163.ngrok-free.app";
+  const serverConnect = "http://localhost:9000";
 
-  useEffect(() => {  
+  useEffect(() => {
 
-    const socket = io.connect("http://localhost:9000");
-  
+    const socket = io.connect(`${serverConnect}`);
+
     peer.on("open", (id) => {
       socket.emit("join-room", roomId, id);
     });
@@ -77,9 +71,9 @@ const VideoCall = ({ peer }) => {
       return () => {
         socket.close();
       };
+      // eslint-disable-next-line
   },[]);
 
-  // console.log("Print peers", peers)
 
   const connectToNewUser = (userId, stream) => {
     // send local video stream to remote user
@@ -94,7 +88,6 @@ const VideoCall = ({ peer }) => {
     })
     peers1[userId] = call
     setPeers(prevPeers => ({ ...prevPeers, [userId]: call }))
-
   };
 
 
@@ -103,21 +96,13 @@ const VideoCall = ({ peer }) => {
     video.addEventListener("loadedmetadata", () => {
       video.play();  
     });
-    // const videoWrapper = document.createElement('div');
-    // videoWrapper.innerText = `User: ${user}`; // add your text here
-    // videoWrapper.appendChild(video);
-    // videoGridRef.current.appendChild(videoWrapper);
-
-    // if (videoGridRef.current) {
       videoGridRef.current.appendChild(video);
-    // }
   };
 
 
   const deleteUser = (userId) => {
     const filteredItems = peers.filter((key) => key !== userId);
     setPeers(filteredItems);
-    // console.log("test 3 ", filteredItems)
   };
 
   const handleChangeText = () => {
@@ -126,30 +111,14 @@ const VideoCall = ({ peer }) => {
   };
 
 
-  const handleMuteMicrophone = () => {
-    setMuteMicrophone((w) => !w)
-    console.log("muted")
-  };
+  const handleCamera = () => {
+    // query
+  }
 
-  console.log(muteMicrophone)
-  
-  // const onNameSubmit = () => {
-  //   setNameInputted((prev) => (!prev));
-  //   // setCameraEnabled(true);
-  //   const userNamed = userName.current.value;
-  //   setNameToShowOnVideo(userNamed);
-  // };
 
 
   return (
     <>
-      {/* {nameInputted && (
-      <EnterNameContainer>
-          <input ref={userName} type="text" placeholder="Enter name"></input>
-          <button type="submit" onClick={onNameSubmit}>Join Chat</button>
-      </EnterNameContainer>
-      )} */}
-
       <OuterContainer>
       <Image alt="people talking on laptop" draggable="false" src={picture}></Image>
 
@@ -159,7 +128,7 @@ const VideoCall = ({ peer }) => {
 
         <InnerContainer>
           <CopyToClipboardContainer>
-            <CopyToClipboard text={"http://localhost:3000/videocall/" + roomId} style={{ marginBottom: ".5rem" }}>
+            <CopyToClipboard text={`${serverConnect}/videocall/${roomId}`} style={{ marginBottom: ".5rem" }}>
                 <CopyToClipboardButton variant="contained" color="primary" onClick={handleChangeText}>
                     {buttonText}
                 </CopyToClipboardButton>
@@ -181,39 +150,13 @@ const VideoCall = ({ peer }) => {
           <SectionOuterButtons>
               <SectionInnerButtons>
                   <a href="/"><RoomButton>Leave Room</RoomButton></a>
-                 <RoomButton onClick={handleMuteMicrophone}>Change Room</RoomButton>
+                 <RoomButton onClick={handleCamera}>Change Room</RoomButton>
               </SectionInnerButtons>
           </SectionOuterButtons>
       </OuterContainer>
     </>
   );
 };
-
-
-// const UserName = styled.h6`
-//   background-color: #252934;
-//   opacity: .7;
-//   border-radius: 5px;
-//   font-size: 16px;
-//   color: white;
-//   width: fit-content;
-//   margin: auto;
-//   margin-top: 17.5vh;
-//   padding: 2px 5px 2px 5px;
-//   position: relative;
-//   z-index: 4;
-// `;
-
-// const EnterNameContainer = styled.div`
-//   background-color: black;
-//   height: 75vh;
-//   margin: auto;
-//   width: 75vw;
-//   border: solid red;
-//   z-index: 3;
-//   position: absolute;
-//   opacity: .9;
-// `;
 
 
 const Logo = styled.img`
