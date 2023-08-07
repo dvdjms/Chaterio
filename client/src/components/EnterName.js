@@ -2,16 +2,13 @@ import React, {useState } from "react";
 import styled from "styled-components";
 
 
-
-
 const EnterName = () => {
 
       const [nameEntered, setNameEntered] = useState(false);
 
       const onNameSubmit = () => {
-            setNameEntered((prev) => (!prev))
-
-}
+            setNameEntered((prev) => (!prev));
+      };
 
       return (
             <>

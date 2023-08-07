@@ -5,8 +5,9 @@ import Draggable from 'react-draggable';
 import "./Chaterio.css";
 import io from "socket.io-client";
 import styled from "styled-components";
-import logo from "../static/images/chaterioLogo.png"
-import picture from "../static/images/backgroundpicture.jpg"
+import logo from "../static/images/chaterioLogo.png";
+import picture from "../static/images/backgroundpicture.jpg";
+import config from '../config';
 
 
 const VideoCall = ({ peer }) => {
@@ -20,13 +21,11 @@ const VideoCall = ({ peer }) => {
   const { roomId } = useParams();
   const peers1 = {};
 
-  // const serverConnect = "https://60bf-92-1-199-163.ngrok-free.app";
-  const serverConnect = "http://localhost:9000";
 
   useEffect(() => {
 
-    const socket = io.connect(`${serverConnect}`);
-
+    const socket = io.connect(`${config.serverPort}`);
+    
     peer.on("open", (id) => {
       socket.emit("join-room", roomId, id);
     });
@@ -128,7 +127,7 @@ const VideoCall = ({ peer }) => {
 
         <InnerContainer>
           <CopyToClipboardContainer>
-            <CopyToClipboard text={`${serverConnect}/videocall/${roomId}`} style={{ marginBottom: ".5rem" }}>
+            <CopyToClipboard text={`${config.clientPort}/videocall/${roomId}`} style={{ marginBottom: ".5rem" }}>
                 <CopyToClipboardButton variant="contained" color="primary" onClick={handleChangeText}>
                     {buttonText}
                 </CopyToClipboardButton>

@@ -1,6 +1,10 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
+
 const serverPort = 9000;
+
+app.use(cors());
 
 const server = require('http').Server(app);
 
@@ -11,10 +15,7 @@ const io = require("socket.io")(server, {
     }
 });
 
-const cors = require("cors");
-app.use(cors());
 app.use(express.static('src')) 
-
 
 io.on("connection", (socket) => {
 
@@ -32,6 +33,7 @@ io.on("connection", (socket) => {
 });
 
 app.get('/', (req, res) => {
+  console.log('this', req.headers);
   res.send(`Server is running on port ${serverPort}`)
 })
 

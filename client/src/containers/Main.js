@@ -3,11 +3,12 @@ import React from "react";
 import Home from "../components/Home";
 import VideoCall from "../components/VideoCall";
 import { Peer } from 'peerjs';
+import config from '../config'
 
 
 const peer = new Peer(undefined, {
-    host: '/', 
-    port: 9001,
+    host: config.peerjsHost,
+    port: 9001
 });
 
 
